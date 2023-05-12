@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block pagehead %}
+    <title>Info palestra</title>
+{% endblock %}
+{% block pagebody %}
+    <header>
+        <nav>
+            <div id="div0">
+                <a href="/">Homepage</a>
+            </div>
+            <div id="div1">
+                <h1>Informazioni palestra</h1>
+            </div>
+            <div id="div2">
+            </div>
+        </nav>
+    </header>
+    
+    <hr>
+    <h3>Corsi</h3>
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Nome</th>
+            <th>Iscritti massimi</th>
+            <th>Id istruttore</th>
+            <th>Id stanza</th>
+        </tr>
+        {% for c in courses %}
+        <tr>
+            <td>{{ c.id }}</td>
+            <td>{{ c.nome }}</td>
+            <td>{{ c.iscrittimax }}</td>
+            <td>{{ c.istruttore }}</td>
+            <td>{{ c.stanza }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h3>Stanze</h3>
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Nome</th>
+            <th>Dimensione</th>
+        </tr>
+        {% for r in rooms %}
+        <tr>
+            <td>{{ r.id }}</td>
+            <td>{{ r.nome }}</td>
+            <td>{{ r.dimensione }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h3>Sale pesi</h3>
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Dimensione</th>
+            <th>Iscritti massimi</th>
+        </tr>
+        {% for w in weight_rooms %}
+        <tr>
+            <td>{{ w.id }}</td>
+            <td>{{ w.dimensione }}</td>
+            <td>{{ w.iscrittimax }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h3>Istruttori</h3>
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Nome</th>
+            <th>Cognome</th>
+            <th>Data di nascita</th>
+            <th>Email</th>
+        </tr>
+        {% for t in trainers %}
+        <tr>
+            <td>{{ t.id }}</td>
+            <td>{{ t.nome }}</td>
+            <td>{{ t.cognome }}</td>
+            <td>{{ t.datanascita }}</td>
+            <td>{{ t.email }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+{% block pagescript %}
+{% endblock %}

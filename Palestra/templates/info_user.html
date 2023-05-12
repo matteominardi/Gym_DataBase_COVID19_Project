@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Info utente</title>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <style>
+            *{
+                padding: 0;
+                margin: 0;
+                border: none;
+            }
+
+            .clearfix{
+                overflow: auto;
+            }
+
+            .clearfix::after{
+                content: "";
+                clear: both;
+                display: table;
+            }
+
+            body{
+                /*font-family: 'Courier New', Courier, monospace;*/
+                font-family: "Comic Sans MS", cursive, sans-serif;
+                background-color: #f3f2ee;
+            }
+
+            header{
+                background-color: white;
+                padding-bottom: 1%;
+            }
+
+            header div{
+                display: inline-block;
+                width: 32%;
+                text-align: center;
+            }
+
+            header a{
+                text-decoration: none;
+                font-size: 15pt;
+                font-weight: bold;
+                color: blue;
+            }
+
+            header a:hover{
+                text-decoration: underline;
+            }
+
+            h1{
+                font-family: "Comic Sans MS", cursive, sans-serif;
+                text-align: center;
+                font-size: 25pt;
+                color: #51bdd5;
+                font-weight: bold;
+                text-shadow: 1px 1px black;
+            }
+
+            h3{
+                font-family: "Comic Sans MS", cursive, sans-serif;
+                font-weight: bold;
+                margin-left: 3%;
+            }
+
+            table{
+                margin-left: 3%;
+                overflow: hidden;
+                text-align: center;
+                background-color: ivory;
+                /*box-shadow: 10px 10px 5px #dedede;*/
+                box-shadow: 5px 5px 5px black;
+            }
+
+            table th{
+                padding: 5px;
+                border: 1px solid black;
+            }
+
+            table th *{
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            table td{
+                padding: 5px;
+                border: 1px solid black;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <div id="div0">
+                    <a href="reserved_private">Area personale</a>
+                </div>
+                <div id="div1">
+                    <h1>Informazioni utente</h1>
+                </div>
+                <div id="div2">
+                </div>
+            </nav>
+        </header>
+        {% if subscriber %}
+        <h3>Abbonamento: tipo "{{ subscription }}", scadenza: "{{ subscriber.datafineabbonamento }}"</h3>
+        {% else %}
+        <h3>Utente non abbonato</h3>
+        {% endif %}
+        <h3>Prenotazioni effettuate</h3>
+        <table>
+            <tr>
+                <th>Id slot</th>
+                <th>Giorno</th>
+                <th>Ora inizio</th>
+                <th>Ora fine</th>
+            </tr>
+            {% for p in reservations %}
+            <tr>
+                <td>{{ p.slot }}</td>
+                <td>{{ p.giorno }}</td>
+                <td>{{ p.orainizio }}</td>
+                <td>{{ p.orafine }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>

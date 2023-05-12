@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+
+{% block pagehead %}
+    <title>Aggiungi istruttore</title>
+    <style>
+        #sezione0{
+            background-color: white!important;
+            width: 50%!important;
+            display: block!important;
+            margin: 0 auto!important;
+            margin-top: 20px!important;
+        }
+
+        #sezione0 section{
+            margin: 5px!important;
+        }
+
+        #sezione0 section div{
+            box-sizing: border-box!important;
+            display: inline-block!important;
+            width: 70%!important;
+        }
+
+        #divCheck{
+            margin-top: 10px!important;
+        }
+
+        #sezione0 section label{
+            display: inline-block!important;
+            width: 25%!important;
+        }
+
+        #sezione0 input[type="text"], input[type="password"], input[type="email"], input[type="date"]{
+            width: 100%!important;
+            border: 0.1px solid black!important;
+            padding: 10px!important;
+            margin: 0 auto!important;
+            margin-top: 10px!important;
+            font-size: 12pt!important;
+        }
+
+        #sezione0 input[type="button"]{
+            display: block!important;
+            margin: 0 auto!important;
+            margin-top: 30px!important;
+            margin-bottom: 30px!important;
+            padding: 10px 20px 10px 20px!important;
+            border-radius: 5px!important;
+            font-size: 20pt!important;
+            border: 1px solid black!important;
+            background-color: #4eb99f!important;
+            width: 25%!important;
+        }
+
+        #sezione0 input[type="button"]:hover{
+            border: 2px solid blue!important;
+            background-color: #5febc8!important;
+        }
+
+        #sezione0 a{
+            text-align: center!important;
+            color: blue!important;
+            display: block!important;
+            margin: 0 auto!important;
+            margin-top: 10px!important;
+        }
+
+        #span0{
+            padding-left: 5%!important;
+        }
+
+        #span0 select{
+            border: 1px solid black!important;
+        }
+
+        #span1{
+            padding-left: 5%!important;
+        }
+
+        #span1 select{
+            border: 1px solid black!important;
+        }
+    </style>
+{% endblock %}
+{% block pagebody %}
+    <header>
+        <nav>
+            <div id="div0">
+                <a href="/">Homepage</a>
+            </div>
+            <div id="div1">
+                <h1>Registrazione istruttore</h1>
+            </div>
+            <div id="div2">
+            </div>
+        </nav>
+    </header>
+
+    <section id="sezione0">
+        <form id="form0" class="w3-container w3-card-4" action="/add_trainer_conf" method="POST">
+            <section>
+                <section>
+                    <label>Nome:</label>
+                    <div>
+                        <input id="nome" type="text" name="nome" placeholder="Inserisci qui il tuo nome">
+                    </div>
+                </section>
+                
+                <section>
+                    <label>Cognome:</label>
+                    <div>
+                        <input id="cognome" type="text" name="cognome"  placeholder="Inserisci qui il tuo cognome">
+                    </div>
+                </section>
+                
+                <section>
+                    <label>Data di nascita:</label>
+                    <div>
+                        <input id="data" type="date" name="dataNascita" min='1899-01-01' max='2021-08-01'>
+                    </div>
+                </section>
+            
+                <section>
+                    <label>Email:</label>
+                    <div>
+                        <input id="email" type="email" name="email" placeholder="Inserisci qui la tua email">
+                    </div>
+                </section>
+                
+                
+                <section>
+                    <label>Username:</label>
+                    <div>
+                        <input id="username" type="text" name="username"  placeholder="Inserisci qui il tuo username">
+                    </div>
+                </section>
+                
+                <section>
+                    <label>Password:</label>
+                    <div>
+                        <input id="pwd" type="password" name="password"  placeholder="Inserisci qui la tua password" oninput="ControllaPass()">
+                    </div>
+                </section>
+                
+                <section>
+                    <label>Conferma password:</label>
+                    <div>
+                        <input id="conf" type="password" name="conf"  placeholder="Conferma qui la tua password"  oninput="ControllaPass()">
+                    </div>
+                </section>
+
+                <input id="sub0" class="button" type="button" value="Conferma" onclick="ControllaConferma()">
+            </section>
+        </form>
+    </section>
+{% endblock %}
+{% block pagescript %}
+    <script>
+        var form0 = document.getElementById("form0");
+        var pulsante = document.getElementById("sub0");
+
+        var txtNome = document.getElementById("nome");
+        var txtCognome = document.getElementById("cognome");
+        var txtData = document.getElementById("data");
+        var txtEmail = document.getElementById("email");
+        var txtUsername = document.getElementById("username");
+        var txtPwd = document.getElementById("pwd");
+        var txtConf = document.getElementById("conf");
+
+        //Funzione per controllare che i dati siano inseriti correttamente
+        function ControllaConferma(){
+            if(txtNome.value.trim() != "" && txtCognome.value.trim() != "" && txtData.value.trim() != "" && txtEmail.value.trim() != "" && txtUsername.value.trim() != "" && txtPwd.value.trim() != "" && txtConf.value.trim() != "" && ControllaPwd())
+                form0.submit();
+            else
+                alert("I dati non sono stati inseritit correttamente");
+        }
+
+        //Funzione per controllare che le due password inserite siano uguali, con output visivo per l'utente
+        function ControllaPass(){
+            var v1 = txtPwd.value.trim();
+            var v2 = txtConf.value.trim();
+            if(v1 == "")
+                txtPwd.style.backgroundColor = "white";
+            else{
+                txtPwd.style.backgroundColor = "#5febc8";
+                if(txtConf.value == "")
+                    txtConf.style.backgroundColor = "white";
+                else if(ControllaPwd()){
+                    txtPwd.style.backgroundColor = "#5febc8";
+                    txtConf.style.backgroundColor = "#5febc8";
+                }
+                else
+                    txtConf.style.backgroundColor = "#e76565";
+            }   
+        }
+
+        function ControllaPwd(){
+            return txtPwd.value.trim() == txtConf.value.trim();
+        }
+    </script>
+{% endblock %}

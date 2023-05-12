@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+
+{% block pagehead %}
+    <title>Administration</title>
+    <style>
+        #sezione0 section label{
+            display: inline-block;
+            width: 35%!important;
+        }
+    </style>
+{% endblock %} 
+{% block pagebody %}
+    <header>
+        <nav>
+            <div id="div0">
+            </div>
+            <div id="div1">
+                <h1>Amministrazione</h1>
+            </div>
+            <div id="div2">
+                <a href="logout">Logout</a>
+            </div>
+        </nav>
+    </header>
+    {% if current_user.is_authenticated and current_user.email == 'admin@palestra.it' %}
+    <span id="spanControlli" style="visibility: hidden;">{{controllo}}</span> 
+    <span id="spanAccessi" style="visibility: hidden;">{{accessi_settimana}}</span>
+    <span id="spanSlot" style="visibility: hidden;">{{slot_giorno}}</span>
+    <span id="spanPersoneMax" style="visibility: hidden;">{{persone_max}}</span>
+    <span id="spanPersoneMq" style="visibility: hidden;">{{personemq}}</span>
+
+    <h3>Operazioni disponibili</h3>
+    <div id="operazioniDisp">
+        <section id="sezione0" class="w3-container w3-card-4">
+            <form id="formChecks" action="/edit_checks" method="POST">
+                <section>
+                    <div>
+                        <label>Esegui controlli giornalieri</label>
+                        <input id="txtControlli" name="controlliGiornalieri" type="number" min="1" value="1" style="visibility: hidden;">
+                    </div>
+                    <input id="subControlli" class="button" type="button" value="Esegui" onclick="EseguiControlli()">
+                </section>
+                <hr>
+            </form>
+            <form id="form01" action="/edit_information_accessi" method="POST">                    
+                <section>
+                        <div>
+                            <label>Modifica accessi settimanali</label>
+                            <input id="txtAccessi" name="accessiSettimana" type="number" min="1" max="7" value="1">
+                        </div>
+                        <input id="subAccessi" class="button" type="button" value="Modifica" onclick="ModificaAccessi()">
+                </section>
+                <hr>
+            </form>
+            <form id="form02" action="/edit_information_tempo" method="POST">
+                <section>
+                        <div>
+                            <label>Modifica tempo allenamento</label>
+                            <input id="txtSlot" name="tempoAllenamento" type="number" min="1" max="6" value="1">
+                        </div>
+                        <input id="subSlot" class="button" type="button" value="Modifica" onclick="ModificaSlot()">
+                </section>
+                <hr>
+            </form>
+            <form id="form03" action="/edit_information_personemax" method="POST">
+                <section>
+                        <div>
+                            <label>Modifica numero persone massime</label>
+                            <input id="txtPersone" name="personeMassime" type="number" min="1" max={{persone_max}} value="1">
+                        </div>
+                        <input id="subPersone" class="button" type="button" value="Modifica" onclick="ModificaPersone()">
+                </section>
+                <hr>
+            </form>
+            <form id="form04" action="/edit_information_personemq" method="POST">
+                <section>
+                        <div>
+                            <label>Modifica numero di metri quadri minimi a persona</label>
+                            <input id="txtPersoneMq" name="personeMq" type="number" min="1" value="2">
+                        </div>
+                        <input id="subPersoneMq" class="button" type="button" value="Modifica" onclick="ModificaPersoneMq()">
+                </section>
+            </form>
+
+            <hr>
+
+            <form id="form5" action="/edit_trainers" method="POST">
+                <section>
+                    <div>
+                        <label>Gestione degli istruttori</label>
+                    </div>
+                    <input id="subIstruttori" class="button" type="button" value="Gestisci" onclick="GestisciIstruttori()">
+                </section>
+            </form>
+
+            <hr>
+
+            <form id="form6" action="/edit_others" method="POST">
+                <section>
+                    <div>
+                        <label>Gestione dello staff</label>
+                    </div>
+                    <input id="subAltri" class="button" type="button" value="Gestisci" onclick="GestisciAltri()">
+                </section>
+            </form>
+
+            <hr>
+
+            <form id="form1" action="/edit_courses" method="POST">
+                <section>
+                    <div>
+                        <label>Gestione dei corsi</label>
+                    </div>
+                    <input id="subCorsi" class="button" type="button" value="Gestisci" onclick="GestisciCorsi()">
+                </section>
+            </form>
+
+            <hr>
+
+            <form id="form2" action="/edit_rooms" method="POST">
+                <section>
+                    <div>
+                        <label>Gestione delle stanze</label>
+                    </div>
+                    <input id="subStanze" class="button" type="button" value="Gestisci" onclick="GestisciStanze()">
+                </section>
+            </form>
+
+            <hr>
+
+            <form id="form3" action="/edit_weight_rooms" method="POST">
+                <section>
+                    <div>
+                        <label>Gestione delle sale pesi</label>
+                    </div>
+                    <input id="subSale" class="button" type="button" value="Gestisci" onclick="GestisciSalePesi()">
+                </section>
+            </form>
+
+            <hr>
+            
+            <form id="form4" action="/contact_tracing" method="POST">
+            <section>
+                <div>
+                    <label>Contact tracing</label>
+                </div>
+                <input id="subTracing" class="button" type="button" value="Esegui" onclick="EseguiContactTracing()">
+            </section>
+            </form>
+        </section>
+    </div>
+    {% else %}
+    <p id="p0"><label id="lab0">Per essere benvenuto devi essere autenticato.</label></p>
+    {% endif %}
+{% endblock %}
+{% block pagescript %}
+    <script>
+        var formChecks = document.getElementById("formChecks");
+        var form01 = document.getElementById("form01");
+        var form02 = document.getElementById("form02");
+        var form03 = document.getElementById("form03");
+        var form04 = document.getElementById("form04");
+        var form1 = document.getElementById("form1");
+        var form2 = document.getElementById("form2");
+        var form3 = document.getElementById("form3");
+        var form4 = document.getElementById("form4");
+        var form5 = document.getElementById("form5");
+        var form6 = document.getElementById("form6");
+
+        var spanControlli = document.getElementById("spanControlli");
+        var spanAccessi = document.getElementById("spanAccessi");
+        var spanSlot = document.getElementById("spanSlot");
+        var spanPersoneMax = document.getElementById("spanPersoneMax");
+        var spanPersoneMq = document.getElementById("spanPersoneMq");
+        var txtControlli = document.getElementById("txtControlli");
+        var txtAccessi = document.getElementById("txtAccessi");
+        var txtSlot = document.getElementById("txtSlot");
+        var txtPersone = document.getElementById("txtPersone");
+        var txtPersoneMq = document.getElementById("txtPersoneMq");
+        
+        document.body.onload = function(){  //Impostazione dei valori inziali presenti sul database
+            txtControlli.value = spanControlli.textContent;
+            txtAccessi.value = spanAccessi.textContent;
+            txtSlot.value = spanSlot.textContent;
+            txtPersone.value = spanPersoneMax.textContent;
+            txtPersoneMq.value = spanPersoneMq.textContent;
+        }
+
+        //Funzione per controllare che i dati siano inseriti correttamente
+        function Controlla(){
+            if(txtAccessi.value > 0 && txtSlot.value > 0 && txtPersone.value > 0 && txtPersoneMq.value > 0)
+                return true;
+            else
+                return false;
+        }
+
+        function ModificaAccessi(){
+            if(Controlla())
+                form01.submit();
+            else 
+                alert("I dati non sono stati inseritit correttamente");
+        }
+
+        function ModificaSlot(){
+            if(Controlla())
+                form02.submit();
+            else 
+                alert("I dati non sono stati inseritit correttamente");
+        }
+
+        function ModificaPersone(){
+            if(Controlla())
+                form03.submit();
+            else 
+                alert("I dati non sono stati inseritit correttamente");
+        }
+
+        function ModificaPersoneMq(){
+            if(Controlla())
+                form04.submit();
+            else 
+                alert("I dati non sono stati inseritit correttamente");
+        }
+
+        function EseguiControlli(){
+            formChecks.submit();
+        }
+
+        function GestisciCorsi(){
+            form1.submit();
+        }
+
+        function GestisciStanze(){
+            form2.submit();
+        }
+        
+        function GestisciSalePesi(){
+            form3.submit();
+        }
+
+        function GestisciIstruttori(){
+            form5.submit();
+        }
+
+        function GestisciAltri(){
+            form6.submit();
+        }
+
+        function EseguiContactTracing(){
+            form4.submit();
+        }
+    </script>
+{% endblock %}

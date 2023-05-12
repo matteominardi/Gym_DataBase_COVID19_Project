@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+
+{% block pagehead %}
+    <title>Area riservata</title>
+    
+    <style>
+        #span0{
+            padding-left: 3%!important;
+        }
+
+        #span0 select{
+            border: 1px solid black!important;
+        }
+
+        #span1{
+            padding-left: 3%!important;
+        }
+
+        #span1 select{
+            border: 1px solid black!important;
+        }
+    </style>
+{% endblock %}
+{% block pagebody %}
+    <header>
+        <nav>
+            <div id="div0">
+            </div>
+            <div id="div1">
+                <h1>Area riservata</h1>
+            </div>
+            <div id="div2">
+                <a href="logout">Logout</a>
+            </div>
+        </nav>
+    </header>
+    {% if current_user.is_authenticated %}
+    <h3>Informazioni utente {{ current_user.nome }} {{ current_user.cognome }}</h3>
+    <div id="informazioniUtente">
+        <table>
+            <tr>
+                <th>Id</th>
+                <th>Username</th>
+                <th>Nome</th>
+                <th>Cognome</th>
+                <th>Data di nascita</th>
+                <th>Email</th>
+            </tr>
+            <tr>
+                <td>{{ current_user.id }}</td>
+                <td>{{ current_user.username }}</td>
+                <td>{{ current_user.nome }}</td>
+                <td>{{ current_user.cognome }}</td>
+                <td>{{ current_user.datanascita }}</td>
+                <td>{{ current_user.email }}</td>
+            </tr>
+        </table>
+    </div>
+    
+    <h3>Operazioni disponibili</h3>
+    <div id="operazioniDisp">
+        <section id="sezione0" class="w3-container w3-card-4">
+            <section>
+                <form id="informazioni" action="/info_user" method="POST">
+                    <div>
+                        <label>Ulteriori informazioni</label>
+                    </div>
+                    <input id="subInfo" class="button" type="button" value="Visualizza" onclick="VisualizzaInformazioni()">
+                </form>
+            </section>
+            <hr>
+            {% if sub==True %}
+            <section>
+                <form id="calendario" action="/calendar" method="POST">
+                    <div>
+                        <label>Effettua una prenotazione</label>
+                    </div>
+                    <input id="subCal" class="button" type="button" value="Prenota" onclick="PrenotaCalendario()">
+                    <select name="anno" id="spanAnno" style="visibility: hidden;">
+                        <option></option>
+                    </select>
+                    <select name="mese" id="spanMese" style="visibility: hidden;">
+                        <option></option>
+                    </select>
+                    <select name="giorno" id="spanGiorno" style="visibility: hidden;">
+                        <option></option>
+                    </select>
+                </form>
+            </section>
+            <hr>
+            <section>
+                <form id="cancella_prenotazione" action="/cancel_reservation" method="POST">
+                    <div>
+                        <label>Cancella una prenotazione</label>
+                    </div>
+                    <input id="subCancPren" class="button" type="button" value="Cancella" onclick="CancellaPrenotazione()">
+                </form>
+            </section>
+            {% else %}
+            <section>
+                <form id="abbonati" action="/subscribe" method="POST">
+                    <div id="divCheck">
+                        <label>Effettua abbonamento</label>
+                        <input id="abbonamento" type="checkbox" onchange="ControllaCheck()"/>Abbonati
+                        <span id="span0" style="visibility: hidden;">
+                            <select id="select0" name="abb" onchange="ControllaProva()">
+                                <option value="null" selected hidden>Seleziona abbonamento</option>
+                                <option value="sala_pesi">Sala pesi</option>
+                                <option value="corsi">Corsi</option>
+                                <option value="completo">Completo</option>
+                                <option value="prova">Prova</option>
+                            </select>
+                        </span>
+                        <span id="span1" style="visibility: hidden;">
+                            <select id="select1" name="durata">
+                                <option value="0" selected hidden>Seleziona durata</option>
+                                <option value="30">1 mese</option>
+                                <option value="90">3 mesi</option>
+                                <option value="180">6 mesi</option>
+                                <option value="365">1 anno</option>
+                            </select>
+                        </span>
+                        <span id="spanIdUtente" name="idUtente" style="visibility: hidden;">{{current_user.id}}</span>
+                    </div>
+                    <input id="subAbb" class="button" type="button" value="Abbonati" onclick="Abbonati()">
+                </form>
+            </section>
+            {% endif %}
+        </section>
+    </div>
+    {% else %}
+    <p id="p0"><label id="lab0">Per essere benvenuto devi essere autenticato.</label></p>
+    {% endif %}
+{% endblock %}
+{% block pagescript %}
+    <script>
+        var span0 = document.getElementById("span0");
+        var span1 = document.getElementById("span1");
+        var spanAnno = document.getElementById("spanAnno");
+        var spanMese = document.getElementById("spanMese");
+        var spanGiorno = document.getElementById("spanGiorno");
+        
+        var selectAbbonamento = document.getElementById("select0");
+        var selectDurata = document.getElementById("select1");
+        var cbxAbbonamento = document.getElementById("abbonamento");
+        var informazioni = document.getElementById("informazioni");
+        var cancella_prenotazione = document.getElementById("cancella_prenotazione");
+        var iscrizione = document.getElementById("iscrizione");
+        var calendario = document.getElementById("calendario");
+        var abbonati = document.getElementById("abbonati");
+        var spanIdUtente = document.getElementById("spanIdUtente");
+
+        document.body.onload = function(){
+            var data_corrente = new Date();
+            var opt = spanAnno.getElementsByTagName("option");
+            opt[0].value = data_corrente.getFullYear();
+            opt = spanMese.getElementsByTagName("option");
+            opt[0].value = data_corrente.getMonth()+1;
+            opt = spanGiorno.getElementsByTagName("option");
+            opt[0].value = data_corrente.getDate();
+
+            cbxAbbonamento.checked = false;
+            ControllaProva();
+        }
+
+        function VisualizzaInformazioni(){
+            informazioni.submit();
+        }
+
+        function CancellaPrenotazione(){
+            cancella_prenotazione.submit();
+        }
+
+        function IscrizioneCorso(){
+            iscrizione.submit();
+        }
+
+        function PrenotaCalendario(){
+            calendario.submit();
+        }
+
+        //Funzione per visualizzare o nascondere le informazioni sull'abbonamento
+        function ControllaCheck(){
+            if(cbxAbbonamento.checked){
+                span0.style.visibility = "visible";
+                span1.style.visibility = "visible";
+            }
+            else{
+                span0.style.visibility = "hidden";
+                span1.style.visibility = "hidden";
+                selectAbbonamento.value = "null";
+                selectDurata.value = "0";
+            }
+        }
+
+        //Funzione nel caso abbonamento "prova"
+        function ControllaProva(){
+            if(selectAbbonamento.value == "prova" || selectAbbonamento.value == "null")
+                span1.style.visibility = "hidden";
+            else
+                span1.style.visibility = "visible";
+        }
+
+        function Abbonati(){
+            spanIdUtente.value = spanIdUtente.textContent;
+            abbonati.submit();
+        }
+    </script>
+{% endblock %}

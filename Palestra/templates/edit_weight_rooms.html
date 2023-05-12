@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block pagehead %}
+    <title>Gestione sale pesi</title>
+    
+    <style>
+
+        #sezione0{
+            background-color: white!important;
+            width: 90%!important;
+            display: block!important;
+            padding-top: 10px!important;
+            padding-bottom: 10px!important;
+        }
+
+        #sezione0 section{
+            margin: 5px!important;
+            padding: 5px!important;
+        }
+
+        #sezione0 section div{
+            display: inline-block!important;
+            width: 90%!important;
+        }
+
+        #sezione0 section label{
+            display: inline-block!important;
+            width: 30%!important;
+        }
+
+        #sezione0 input[type="button"]{
+            display: inline-block!important;
+            width: 8%!important;
+            margin-right: 0 auto!important;
+            padding: 5px 10px 5px 10px!important;
+            border-radius: 5px!important;
+            border: 1px solid black!important;
+            background-color: #4eb99f!important;
+        }
+
+        #sezione0 input[type="button"]:hover{
+            border: 2px solid blue!important;
+            background-color: #5febc8!important;
+        }
+
+        #sezione0 a{
+            text-align: center!important;
+            color: blue!important;
+            display: block!important;
+            margin: 0 auto!important;
+            margin-top: 10px!important;
+        }
+
+        select{
+            border: 1px solid black!important;
+        }
+
+        input[type=number]{
+            border: 1px solid black!important;
+            width: 5%!important;
+        }
+    </style>
+{% endblock %}
+{% block pagebody %}
+    <header>
+        <nav>
+            <div id="div0">
+                <a href="reserved_private">Area amministrazione</a>
+            </div>
+            <div id="div1">
+                <h1>Gestione sale pesi</h1>
+            </div>
+            <div id="div2">
+            </div>
+        </nav>
+    </header>
+    <h3>Operazioni disponibili</h3>
+    <div id="operazioniDisp">
+        <section id="sezione0" class="w3-container w3-card-4">
+            <form id="form0" action="/add_weight_room" method="POST">
+                <section>
+                        <div>
+                            <label>Aggiungi una sala pesi</label>
+                            Dimensione (in metri quadri): <input id="txtDim0" name="dim" type="number" min="1" value="75">
+                        </div>
+                        <input class="button" type="button" value="Aggiungi" onclick="AggiungiSalaPesi()">
+                </section>
+            </form>
+
+            {% if weight_rooms %}
+            <hr>
+            <form id="form1" action="/remove_weight_room" method="POST">
+                <section>
+                    <div>
+                        <label>Rimuovi una sala pesi</label>
+                        <select id="select1" name="idSala">
+                            {% for w in weight_rooms %}
+                                <option value={{w.id}}>Sala #{{ w.id }}, dimensione: {{ w.dimensione }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input class="button" type="button" value="Rimuovi" onclick="RimuoviSalaPesi()">
+                </section>
+            </form>
+            {% endif %}
+            {% if weight_rooms %}
+            <hr>
+            <form id="form2" action="/update_weight_room" method="POST">
+                <section>
+                    <div>
+                        <label>Modifica una sala pesi</label>
+                        <select id="select2" name="idSala" onchange="AggiornaDim()">
+                            {% for k in weight_rooms2 %}
+                                <option value={{k.id}}>Sala #{{ k.id }}, dimensione: {{ k.dimensione }}</option>
+                            {% endfor %}
+                        </select>
+                        Nuova dimensione (in metri quadri): <input id="txtDim2" name="dim" type="number" min="1">
+                    </div>
+                    <input class="button" type="button" value="Modifica" onclick="ModificaSalaPesi()">
+                </section>
+            </form>
+            {% endif %}
+        </section>
+    </div>
+{% endblock %}
+{% block pagescript %}
+    <script>
+        var form0 = document.getElementById("form0");
+        var form1 = document.getElementById("form1");
+        var form2 = document.getElementById("form2");
+
+        var select1 = document.getElementById("select1");
+        var select2 = document.getElementById("select2");     
+        var txtDim0 = document.getElementById("txtDim0");
+        var txtDim2 = document.getElementById("txtDim2"); 
+
+
+        document.body.onload = function(){
+            AggiornaDim();
+        }
+
+
+        function AggiungiSalaPesi() {
+            if(txtDim0.value >= 1)
+                form0.submit();
+            else
+                alert("I dati non sono stati inseritit correttamente");
+        }
+
+        function RimuoviSalaPesi() {
+            if(select1.value != "")
+                form1.submit();
+            else 
+                alert("I dati non sono stati inseritit correttamente");
+        }
+
+        function ModificaSalaPesi() {
+            if(select2.value != "" && txtDim2.value >= 1) 
+                form2.submit();
+            else
+                alert("I dati non sono stati inseritit correttamente");
+        }
+
+        //Funzione per aggiornare direttamente l'input number con la dimensione corretta
+        function AggiornaDim() {
+            var options2 = select2.getElementsByTagName("option");
+            var textOpt = options2[select2.selectedIndex].textContent;
+            txtDim2.value = textOpt.substr(textOpt.lastIndexOf(" ")+1);
+        }
+    </script>
+{% endblock %}

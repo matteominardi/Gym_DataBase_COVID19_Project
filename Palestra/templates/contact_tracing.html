@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block pagehead %}
+    <title>Contact tracing</title>
+{% endblock %}
+{% block pagebody %}
+    <header>
+        <nav>
+            <div id="div0">
+                <a href="reserved_private">Area amministrazione</a>
+            </div>
+            <div id="div1">
+                <h1>Contact Tracing</h1>
+            </div>
+            <div id="div2">
+            </div>
+        </nav>
+    </header>
+    <h3>Contact tracing</h3>
+    {% if clients %}
+    <div id="operazioniDisp">
+        <section id="sezione0" class="w3-container w3-card-4">
+            <form id="form0" action="/contact_tracing_result" method="POST">
+                <section>
+                    <div>
+                        <label>Tracciamento contagiati</label>
+                        <select id="select0" name="data">
+                            {% for g in days %}
+                                <option value={{g.data}}>Giorno : {{ g.data }}</option>
+                            {% endfor %}
+                        </select>
+                        <select id="select1" name="idCliente">
+                            {% for c in clients %}
+                                <option value={{c.id}}>Cliente #{{ c.id }}: username: {{ c.username }}, nome: {{ c.nome }}, cognome: {{ c.cognome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input class="button" type="button" value="Visualizza" onclick="MostraContagiati()">
+                </section>
+            </form>
+        </section>
+    </div>
+    {% endif %}
+{% endblock %}
+{% block pagescript %}
+    <script>
+        var form0 = document.getElementById("form0");
+        var select0 = document.getElementById("select0");
+
+        function MostraContagiati() {
+            if(select0.value != "")
+                form0.submit();
+            else
+                alert("I dati non sono stati inseritit correttamente");
+        }
+    </script>
+{% endblock %}

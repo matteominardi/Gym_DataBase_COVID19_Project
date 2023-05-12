@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block pagehead %}
+        <title>Contact tracing</title>
+{% endblock %}        
+{% block pagebody %}
+        <header>
+            <nav>
+                <div id="div0">
+                    <a href="reserved_private">Area amministrazione</a>
+                </div>
+                <div id="div1">
+                    <h1>Lista contagiati</h1>
+                </div>
+                <div id="div2">
+                </div>
+            </nav>
+        </header>
+        <h3>Lista dei contagiati</h3>
+        <table>
+            <tr>
+                <th>Id</th>
+                <th>Username</th>
+                <th>Nome</th>
+                <th>Cognome</th>
+                <th>Email</th>
+                <th>Data di nascita</th>
+            </tr>
+            {% for c in contagiati %}
+            <tr>
+                <td>{{ c.id }}</td>
+                <td>{{ c.username }}</td>
+                <td>{{ c.nome }}</td>
+                <td>{{ c.cognome }}</td>
+                <td>{{ c.email }}</td>
+                <td>{{ c.datanascita }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+{% endblock %}
+{% block pagescript %}
+{% endblock %}

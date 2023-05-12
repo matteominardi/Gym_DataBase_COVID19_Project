@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block pagehead %}
+    <title>Gestione corsi</title>
+{% endblock %}
+{% block pagebody %}
+    <header>
+        <nav>
+            <div id="div0">
+                <a href="reserved_private">Area personale</a>
+            </div>
+            <div id="div1">
+                <h1>Prenotazioni</h1>
+            </div>
+            <div id="div2">
+            </div>
+        </nav>
+    </header>
+    <h3>Scegli il tipo di prenotazione</h3>
+    <div id="operazioniDisp">
+        <section id="sezione0" class="w3-container w3-card-4">
+            {% if weight_rooms %}
+            <form id="form0" action="/book_weight_room" method="POST">
+                <section>
+                    <div>
+                        <label>Seleziona sala pesi</label>
+                        
+                        <select id="select0" name="idSala">
+                            {% for w in weight_rooms %}
+                                <option value={{w.id}}>Sala #{{w.id}}, dimensione: {{ w.dimensione }}</option>
+                            {% endfor %}                                
+                        </select>
+                        <select id="selectSlot0" name="idSlot" style="visibility: hidden;">
+                            <option>{{ idSlot }}</option>
+                        </select>
+                    </div>
+                    <input class="button" type="button" value="Prenota" onclick="PrenotaSala()">
+                </section>
+            </form>
+            {% endif %}
+            {% if courses %}
+            <hr>
+            <form id="form1" action="/book_course" method="POST">
+                <section>
+                    <div>
+                        <label>Seleziona corso</label>
+                        <select id="select1" name="idCorso">
+                            {% for c in courses %}
+                                <option value={{c.id}}>Corso #{{c.id}}: {{ c.nome }}</option>
+                            {% endfor %}
+                        </select>
+                        <select id="selectSlot1" name="idSlot" style="visibility: hidden;">
+                            <option value={{idSlot}}></option>
+                        </select>
+                    </div>
+                    <input class="button" type="button" value="Prenota" onclick="PrenotaCorso()">
+                </section>
+            </form>
+            {% endif %}
+        </section>
+    </div>
+{% endblock %}
+{% block pagescript %}        
+    <script>
+        var form0 = document.getElementById("form0");
+        var form1 = document.getElementById("form1");
+        var select0 = document.getElementById("select0");
+        var selectSlot0 = document.getElementById("selectSlot0");
+        var select1 = document.getElementById("select1");
+        var selectSlot1 = document.getElementById("selectSlot1");
+
+        function PrenotaSala(){
+            form0.submit();
+        }
+
+        function PrenotaCorso(){
+            form1.submit();
+        }
+    </script>
+{% endblock %}

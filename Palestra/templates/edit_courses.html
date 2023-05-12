@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block pagehead %}
+    <title>Gestione corsi</title>
+    
+    <style>
+        #operazioniDisp{
+            margin-left: 0px!important;
+        }
+
+        #sezione0{
+            margin-left: 1%;
+            background-color: white!important;
+            display: block!important;
+            width: 96%!important;
+            padding-top: 10px!important;
+            padding-bottom: 10px!important;
+        }
+
+        #sezione0 section{
+            margin: 5px!important;
+            padding: 5px!important;
+        }
+
+        #sezione0 section div{
+            display: inline-block!important;
+            width: 90%!important;
+        }
+
+        #sezione0 section label{
+            display: inline-block!important;
+            width: 12%!important;
+        }
+
+        #sezione0 input[type="button"]{
+            display: inline-block!important;
+            width: 8%!important;
+            margin-right: 0 auto!important;
+            padding: 5px 10px 5px 10px!important;
+            border-radius: 5px!important;
+            border: 1px solid black!important;
+            background-color: #4eb99f!important;
+        }
+
+        #sezione0 input[type="button"]:hover{
+            border: 2px solid blue!important;
+            background-color: #5febc8!important;
+        }
+
+        #sezione0 a{
+            text-align: center!important;
+            color: blue!important;
+            display: block!important;
+            margin: 0 auto!important;
+            margin-top: 10px!important;
+        }
+
+        select{
+            border: 1px solid black!important;
+        }
+
+        input[type=number]{
+            border: 1px solid black!important;
+            width: 5%;
+        }
+
+        input[type=text]{
+            border: 0.1px solid black!important;
+        }
+    </style>
+{% endblock %}
+{% block pagebody %}        
+    <header>
+        <nav>
+            <div id="div0">
+                <a href="reserved_private">Area amministrazione</a>
+            </div>
+            <div id="div1">
+                <h1>Gestione corsi</h1>
+            </div>
+            <div id="div2">
+            </div>
+        </nav>
+    </header>
+    <h3>Operazioni disponibili</h3>
+    <div id="operazioniDisp">
+        <section id="sezione0" class="w3-container w3-card-4">
+            <form id="form0" action="/add_course" method="POST">
+                
+                <section>
+                        <div>
+                            <label>Aggiungi un corso</label>
+                            Nome: <input id="txtNome0" type="text" name="nome" placeholder="Nome corso">
+                            Iscritti massimi: <input id="txtIscritti0" name="iscrittimax" type="number" min="1" value="50">
+                            Istruttore: <select id="select0i" name="idIstruttore">
+                                {% for t in trainers %}
+                                    <option value={{t.id}}>Istruttore #{{t.id}}: {{ t.nome }}</option>
+                                {% endfor %}
+                            </select>
+                            Stanza: <select id="select0s" name="idStanza">
+                                {% for r in rooms %}
+                                    <option value={{r.id}}>Stanza #{{r.id}}: {{ r.nome }}, dimensione: {{ r.dimensione }}</option>
+                                {% endfor %}
+                            </select>
+                            <br><br>
+                            <label style="visibility: hidden;">Aggiungi un corso</label> <!--Per layout-->
+                            Giorni settimana: <select id="selectgiorno" name="primoGiorno">
+                                <option value="1" selected>Lunedì</option>
+                                <option value="2">Martedì</option>
+                                <option value="3">Mercoledì</option>
+                                <option value="4">Giovedì</option>
+                                <option value="5">Venerdì</option>
+                                <option value="6">Sabato</option>
+                                <option value="0">Domenica</option>
+                            </select>
+                            Slot: <select id="selectslot" name="slot">
+                                <option value="05:30:00" selected>1 ° slot: 05:30-08:50</option>
+                                <option value="09:00:00">2 ° slot: 09:00-11:50</option>
+                                <option value="12:00:00">3 ° slot: 12:00-14:50</option>
+                                <option value="15:00:00">4 ° slot: 15:00-17:50</option>
+                                <option value="18:00:00">5 ° slot: 18:00-20:50</option>
+                                <option value="21:00:00">6 ° slot: 21:00-23:50</option>
+                            </select>
+                        </div>
+                        <input class="button" type="button" value="Aggiungi" onclick="AggiungiCorso()">
+                </section>
+            </form>
+            {% if courses %}
+            <hr>
+            <form id="form1" action="/remove_course" method="POST">
+                
+                <section>
+                    <div>
+                        <label>Rimuovi un corso</label>
+                        <select id="select1" name="idCorso">
+                            {% for c in courses %}
+                                <option value={{c.id}}>Corso #{{c.id}}: {{ c.nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input class="button" type="button" value="Rimuovi" onclick="RimuoviCorso()">
+                </section>
+            </form>
+            {% endif %}
+
+            {% if courses %}
+            <hr>
+            <form id="form2" action="/update_course" method="POST">
+                <section>
+                    <div>
+                        <label>Modifica un corso</label>
+                        <select id="select2" name="idCorso">
+                            {% for k in courses2 %}
+                                <option value={{k.id}}>Corso #{{k.id}}: {{ k.nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input class="button" type="button" value="Modifica" onclick="ModificaCorso()">
+                </section>
+            </form>
+            {% endif %}
+        </section>
+    </div>
+    <br>
+{% endblock %}
+{% block pagescript %}
+    <script>
+        var form0 = document.getElementById("form0");
+        var form1 = document.getElementById("form1");
+        var form2 = document.getElementById("form2");
+
+        var select0i = document.getElementById("select0i");
+        var select0s = document.getElementById("select0s");
+        var select1 = document.getElementById("select1");
+        var select2 = document.getElementById("select2");
+        var selectgiorno = document.getElementById("selectgiorno");
+        var selectslot = document.getElementById("selectslot");
+        var txtNome0 = document.getElementById("txtNome0");
+        var txtIscritti0 = document.getElementById("txtIscritti0");
+
+
+        function AggiungiCorso() {
+            if(txtNome0.value.trim() != "" && txtIscritti0.value >= 1 && select0i.value != "" && select0s.value != "" && selectgiorno.value != "" && selectslot.value != "")
+                form0.submit();
+            else
+                alert("I dati non sono stati inseritit correttamente");
+        }
+
+        function RimuoviCorso() { 
+            if(select1.value != "")
+                form1.submit();
+            else
+                alert("I dati non sono stati inseritit correttamente");
+        }
+
+        function ModificaCorso() {
+            if(select2.value != "")
+                form2.submit();
+            else
+                alert("I dati non sono stati inseritit correttamente");
+        }
+    </script>
+{% endblock %}

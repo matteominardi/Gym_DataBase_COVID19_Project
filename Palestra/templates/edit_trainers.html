@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block pagehead %}
+    <title>Gestione istruttori</title>
+{% endblock %} 
+{% block pagebody %}
+        <header>
+            <nav>
+                <div id="div0">
+                    <a href="reserved_private">Area amministrazione</a>
+                </div>
+                <div id="div1">
+                    <h1>Gestione istruttori</h1>
+                </div>
+                <div id="div2">
+                </div>
+            </nav>
+        </header>
+        <h3>Operazioni disponibili</h3>
+        <div id="operazioniDisp">
+            <section id="sezione0" class="w3-container w3-card-4">
+                <form id="form0" action="/add_trainer" method="POST">
+                    
+                    <section>
+                            <div>
+                                <label>Aggiungi istruttore</label>
+                            </div>
+                            <input class="button" type="button" value="Aggiungi" onclick="AggiungiIstruttore()">
+                    </section>
+
+                </form>
+                {% if trainers %}
+                <hr>
+                <form id="form1" action="/remove_trainer" method="POST">
+                    <section>
+                        <div>
+                            <label>Rimuovi un istruttore</label>
+                            <select id="select1" name="idIstruttore">
+                                {% for t in trainers %}
+                                    <option value={{t.id}}>Istruttore #{{ t.id }} : nome: {{ t.nome }}, cognome: {{ t.cognome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <input class="button" type="button" value="Rimuovi" onclick="RimuoviIstruttore()">
+                    </section>
+                </form>
+                {% endif %}
+            </section>
+        </div>
+{% endblock %}
+{% block pagescript %}
+    <script>
+        var form0 = document.getElementById("form0");
+        var form1 = document.getElementById("form1");
+
+        var select1 = document.getElementById("select1");
+
+        function AggiungiIstruttore() {
+            form0.submit();
+        }
+
+        function RimuoviIstruttore() {
+            if(select1.value != "")
+                form1.submit();
+            else
+                alert("I dati non sono stati inseritit correttamente");
+        }
+    </script>
+{% endblock %}

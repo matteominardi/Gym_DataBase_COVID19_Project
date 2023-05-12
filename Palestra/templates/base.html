@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        {% block pagehead %}
+        {% endblock %}
+        <style>
+            *{
+                margin: 0px;
+                padding: 0px;
+                border: none;
+            }
+
+            #p0{
+                padding: 5px;
+            }
+
+            .clearfix{
+                overflow: auto;
+            }
+
+            .clearfix::after{
+                content: "";
+                clear: both;
+                display: table;
+            }
+
+            body{
+                /*font-family: 'Courier New', Courier, monospace;*/
+                font-family: "Comic Sans MS", cursive, sans-serif;
+                background-color: #f3f2ee;
+            }
+
+            /*Stile dell'header*/
+            header{
+                background-color: white;
+                top: 0;
+            }
+
+            header div{
+                display: inline-block;
+                width: 32%;
+                text-align: center;
+            }
+
+            header a{
+                text-decoration: none;
+                font-size: 15pt;
+                font-weight: bold;
+                color: blue;
+            }
+
+            header a:hover{
+                text-decoration: underline;
+            }
+
+            #div0 a{
+                padding-left: 4%;
+            }
+
+            /*Stile dei titoli*/
+            h1{
+                font-family: "Comic Sans MS", cursive, sans-serif;
+                font-size: 25pt;
+                color: #51bdd5;
+                font-weight: bold;
+                text-shadow: 1px 1px black;
+            }
+
+            /*Stile dei titoletti*/
+            h3{
+                font-family: "Comic Sans MS", cursive, sans-serif;
+                font-weight: bold;
+                margin-left: 7%;
+            }
+
+            img{
+                display: block;
+                margin: 0 auto;
+                padding: 1%;
+            }
+
+            /*Stile delle tabelle di visualizzazione*/
+            table{
+                margin-left: 7%;
+                overflow: hidden;
+                text-align: center;
+                background-color: ivory;
+                /*box-shadow: 10px 10px 5px #dedede;*/
+                box-shadow: 5px 5px 5px black;
+            }
+
+            table th{
+                padding: 5px;
+                border: 1px solid black;
+            }
+
+            table th *{
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            table td{
+                padding: 5px;
+                border: 1px solid black;
+            }
+
+            #operazioniDisp{
+                margin-left: 3%;
+            }
+
+            /*Stile delle form delle operazioni*/
+            #sezione0{
+                margin-left: 3%;
+                background-color: white;
+                width: 90%;
+                display: block;
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+
+            #sezione0 section{
+                margin: 5px;
+                padding: 5px;
+            }
+
+            #sezione0 section div{
+                display: inline-block;
+                width: 90%;
+            }
+
+            #sezione0 section label{
+                display: inline-block;
+                width: 30%;
+            }
+
+            #sezione0 input[type="button"]{ /*Stile dei pulsanti*/
+                display: inline-block;
+                width: 8%;
+                margin-right: 0 auto;
+                padding: 5px 10px 5px 10px;
+                border-radius: 5px;
+                border: 1px solid black;
+                background-color: #4eb99f;
+            }
+
+            #sezione0 input[type="button"]:hover{
+                border: 2px solid blue;
+                background-color: #5febc8;
+            }
+
+            #sezione0 a{
+                text-align: center;
+                color: blue;
+                display: block;
+                margin: 0 auto;
+                margin-top: 10px;
+            }
+
+            input[type=number]{ /*Stile degli input-number*/
+                border: 1px solid black;
+                width: 5%;
+            }
+
+            select{ /*Stile delle select*/
+                border: 1px solid black;
+            }
+        </style>
+    </head>
+    <body>
+        {% block pagebody %}
+        {% endblock %}
+    </body>
+    {% block pagescript %}
+    {% endblock %}
+</html>

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block pagehead %}
+    <title>Gestione corsi</title>
+{% endblock %}
+{% block pagebody %}
+    <header>
+        <nav>
+            <div id="div0">
+                <a href="reserved_private">Area personale</a>
+            </div>
+            <div id="div1">
+                <h1>Prenotazioni giorno</h1>
+            </div>
+            <div id="div2">
+            </div>
+        </nav>
+    </header>
+    <h3>Prenotazioni giorno {{ data }}</h3>
+    <div id="operazioniDisp">
+        <section id="sezione0" class="w3-container w3-card-4">
+            <form id="form0" action="/book_slot" method="POST">
+                
+                <section>
+                    <div>
+                        <label>Seleziona slot</label>
+                        
+                        Slots: <select id="select0" name="idSlot">
+                            {% for s in slots %}
+                                <option value={{s.id}}>{{ s.orainizio }} - {{ s.orafine }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <input class="button" type="button" value="Prenota" onclick="Prenota()">
+                </section>
+            </form>
+        </section>
+    </div>
+{% endblock %}    
+{% block pagescript %}
+    <script>
+        var form0 = document.getElementById("form0");
+        var select0 = document.getElementById("select0");
+
+        function Prenota(){
+            form0.submit();
+        }
+    </script>
+{% endblock %}

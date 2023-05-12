@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block pagehead %}
+    <title>Modifica corso</title>
+    
+    <style>
+        #sezione0{
+            background-color: white!important;
+            display: block!important;
+            width: 90%!important;
+            padding-top: 10px!important;
+            padding-bottom: 10px!important;
+        }
+
+        #sezione0 section{
+            margin: 5px!important;
+            padding: 5px!important;
+        }
+
+        #sezione0 input[type="button"]{
+            width: 8%!important;
+            margin-right: 0 auto!important;
+            padding: 5px 10px 5px 10px!important;
+            border-radius: 5px!important;
+            border: 1px solid black!important;
+            background-color: #4eb99f!important;
+        }
+
+        #sezione0 input[type="button"]:hover{
+            border: 2px solid blue!important;
+            background-color: #5febc8!important;
+        }
+
+        #sezione0 a{
+            text-align: center!important;
+            color: blue!important;
+            display: block!important;
+            margin: 0 auto!important;
+            margin-top: 10px!important;
+        }
+
+        select{
+            border: 1px solid black!important;
+        }
+
+        input[type=number]{
+            border: 1px solid black!important;
+            width: 5%!important;
+        }
+
+        input[type=text]{
+            border: 0.1px solid black!important;
+        }
+    </style>
+{% endblock %}
+{% block pagebody %}  
+    <header>
+        <nav>
+            <div id="div0">
+                <a href="reserved_private">Area amministrazione</a>
+            </div>
+            <div id="div1">
+                <h1>Modifica corso</h1>
+            </div>
+            <div id="div2">
+            </div>
+        </nav>
+    </header>
+    <h3>Modifica</h3>
+    <span id="spanIstruttore" style="visibility: hidden;">{{ course.istruttore }}</span>
+    <span id="spanStanza" style="visibility: hidden;">{{ course.stanza }}</span>
+
+    <div id="operazioniDisp">
+        <section id="sezione0" class="w3-container w3-card-4">
+            <form id="form0" action="/update_course_conf" method="POST">
+                
+                <section>
+                    <select id="selCorso" name="sCorso" style="visibility: hidden;">
+                        <option value={{course.id}} selected></option>
+                    </select>
+                    <br><br>
+                    Nome: <input id="txtNome0" value={{course.nome}} type="text" name="nome" placeholder="Nome corso">
+                    <br><br>
+                    Iscritti massimi: <input id="txtIscritti0" value={{course.iscrittimax}} name="iscrittiMax" type="number" min="1" value="50">
+                    <br><br>
+                    Istruttore: <select id="select0i" name="idIstruttore">
+                        {% for t in trainers %}
+                            <option value="{{t.id}}">Istruttore #{{t.id}}: {{ t.nome }}</option>
+                        {% endfor %}
+                    </select>
+                    <br><br>
+                    Stanza: <select id="select0s" name="idStanza">
+                        {% for r in rooms %}
+                            <option value="{{r.id}}">Stanza #{{r.id}}: {{ r.nome }}, dimensione: {{ r.dimensione }}</option>
+                        {% endfor %}
+                    </select>
+                    <br><br>
+                    
+                    <input class="button" type="button" value="Modifica" onclick="ModificaCorso()">
+                </section>
+            </form>
+        </section>
+    </div>
+{% endblock %}
+{% block pagescript %}
+    <script>
+        var form0 = document.getElementById("form0");
+
+        var select0i = document.getElementById("select0i");
+        var select0s = document.getElementById("select0s");
+        var selCorso = document.getElementById("selCorso");
+        var txtNome0 = document.getElementById("txtNome0");
+        var txtIscritti0 = document.getElementById("txtIscritti0");
+        var spanIdCorso = document.getElementById("spanIdCorso");
+        var spanNome = document.getElementById("spanNome");
+        var spanIscritti = document.getElementById("spanIscritti");
+        var spanIstruttore = document.getElementById("spanIstruttore");
+        var spanStanza = document.getElementById("spanStanza");
+
+
+        document.body.onload = function(){
+            var options0i = select0i.getElementsByTagName("option");
+            for(var i = 0; i < options0i.length; i++)
+                if (options0i[i].value == spanIstruttore.textContent)
+                    options0i[i].selected = "selected";
+
+            var options0s = select0s.getElementsByTagName("option");
+            for(var i = 0; i < options0s.length; i++)
+                if (options0s[i].value == spanStanza.textContent)
+                    options0s[i].selected = "selected";            
+        }
+
+        //Funzione per controllare che i dati siano stati inseriti correttamente
+        function ModificaCorso() {
+            if(select0i.value != "" && select0s.value != "" && txtNome0.value.trim() != "" && txtIscritti0.value > 0)
+                form0.submit();
+            else
+                alert("I dati non sono stati inseritit correttamente");
+        }
+    </script>
+{% endblock %}

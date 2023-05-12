@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Conferma</title>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <style>
+            body{
+               /*font-family: 'Courier New', Courier, monospace;*/
+               font-family: "Comic Sans MS", cursive, sans-serif;
+               background-color: #f3f2ee;
+            }
+            #p0{
+                padding: 5px;
+                padding-left: 15px;
+                /*text-align: center;*/
+            }
+       </style>
+    </head>
+    <body>
+        <p id="p0"><label id="lab0">Operazione completata correttamente. Reindirizzamento tra 3 secondi...</label></p>
+    </body>
+    <script>
+        var lab0 = document.getElementById("lab0");
+        var sec = 2;
+
+        document.body.onload = function(){
+            window.setInterval("SetLabel()", 1000);
+            window.setTimeout("Redirect()", 3000);
+        }
+
+        function Redirect(){
+            location.href = "http://127.0.0.1:5000/reserved_private";
+        }
+
+        function SetLabel(){
+            lab0.innerHTML = "Operazione completata correttamente. Reindirizzamento tra " + sec + " secondi...";
+            sec--;
+        }
+    </script>
+</html>

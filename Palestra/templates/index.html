@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block pagehead %}
+    <title>Homepage</title>
+    <style>
+        header{
+            position: sticky;
+        }
+    </style>
+{% endblock %}
+{% block pagebody %}
+    <header>
+        <nav>
+            <div id="div0">
+                <a href="info">Informazioni palestra</a>
+            </div>
+            <div id="div1">
+                <h1>Benvenuto nella palestra!</h1>
+            </div>
+            <div id="div2">
+                <a href="reserved_private">Accedi o Registrati</a>
+            </div>
+        </nav>
+    </header>
+
+    <img src="https://www.rivistacontrasti.it/v2/wp-content/uploads/2018/03/pesi-wallpaper-g-1024x676.jpg" alt="Palestra">
+{% endblock %}
+{% block pagescript %}
+{% endblock %}

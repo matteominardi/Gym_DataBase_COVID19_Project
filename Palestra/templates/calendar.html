@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Calendar</title>
+        <style>
+            *{
+                margin: 0px;
+                padding: 0px;
+                border: none;
+            }
+            
+            body{
+                /*font-family: 'Courier New', Courier, monospace;*/
+                font-family: "Comic Sans MS", cursive, sans-serif;
+                background-color: #f3f2ee;
+            }
+
+            h1{
+                font-family: "Comic Sans MS", cursive, sans-serif;
+                text-align: center;
+                font-size: 25pt;
+                color: #51bdd5;
+                font-weight: bold;
+                text-shadow: 1px 1px black;
+                padding-top: 10px;
+            }
+
+            header{
+                background-color: white;
+                padding-bottom: 1%;
+            }
+
+            header div{
+                display: inline-block;
+                width: 32%;
+                text-align: center;
+            }
+
+            header a{
+                text-decoration: none;
+                font-size: 15pt;
+                font-weight: bold;
+                color: blue;
+            }
+
+            header a:hover{
+                text-decoration: underline;
+            }
+
+            #secS{ /*Sezione mese e anno*/
+                padding-bottom: 10px;
+                font-size: 14pt;
+                color: black;
+                text-align: center;
+            }
+            #secS div{
+                margin-right: 5px;
+            }
+            #secS div,select{
+                display: inline-block;
+                vertical-align: middle;
+                text-align: center;
+            }
+            #secS select{ /*Selezione mese e anno*/
+                width: 8%;
+                padding: 1px;
+                border-radius: 5px;
+            }
+
+            #secC{ /*Sezione calendario*/
+                padding: 15px;
+            }
+            #secC #tabella{
+                display: block;
+                margin: 0 auto;
+            }
+            #secC #tabella table,tr,td{ /*Bordi tabella*/
+                border-collapse: collapse;
+                border: 2px solid black;
+            }
+            #secC #tabella table{ /*Tabella calendario*/
+                overflow: hidden;
+                margin: 0 auto;
+                text-align: center;
+                background-color: ivory;
+                /*box-shadow: 10px 10px 5px #dedede;*/
+                box-shadow: 10px 10px 7px black;
+            }
+            #secC #tabella table th{ /*Intestazione calendario*/
+                padding: 5px;
+                background-color: #0033cc;
+            }
+            #secC #tabella table th *{
+                display: inline-block;
+                vertical-align: middle;
+                color: ivory;
+                background-color: #0033cc;
+            }
+            #secC #tabella table th span{ /*Nome mese intestazione*/
+                width: 90%;
+                font-size:18pt;
+                text-align: left;
+            }
+            #secC #tabella table td{ /*Colonne calendario*/
+                width: 100px;
+                padding: 10px;
+                font-size: 11pt;
+                text-align: center;
+            }
+            #secC #tabella table td:hover{
+                /*background-color: #00000023;*/
+                background-color: #5febc8!important;
+                color: #0033cc;
+            }
+            #secC #tabella table td span{ /*Giorno colonna*/
+                margin: 0 auto;
+                font-size: 40pt;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <div id="div0">
+                    <a href="reserved_private">Area personale</a>
+                </div>
+                <div id="div1">
+                    <h1>Calendario</h1>
+                </div>
+                <div id="div2">
+                </div>
+            </nav>
+        </header>
+        {% if current_user.is_authenticated %}
+
+        <span id="spanMese" style="visibility: hidden;">{{month}}</span>
+        <span id="spanAnno" style="visibility: hidden;">{{year}}</span>
+        <span id="firstColumn" style="visibility: hidden;">{{first_column}}</span>
+        <span id="lastDay" style="visibility: hidden;">{{last_day}}</span>
+
+        <form id="calendar" name="calendar" action="/book_day" method="POST" style="visibility: hidden;">
+            <select id="dataPassata" name="datapassata">
+                <option selected></option>
+            </select>
+        </form>
+
+        <section id="secS">
+            <form action="/calendar" name="changeCal" id="changeCal" method="POST">
+                <div>Mese e Anno</div>
+                <select id="selMese" name="mese" onchange="SubmitChange()">
+                </select>
+                <select id="selAnno" name="anno" onchange="SubmitChange()">
+                </select>
+                <select id="selGiorno" name="giorno" onchange="SubmitChange()" style="visibility: hidden;">
+                    <option value="1" selected></option>
+                </select>
+            </form>
+        </section>
+        
+        <section id="secC">
+            <section id='tabella'>
+                
+            </section>
+        </section>
+        {% else %}
+        <p id="p0"><label id="lab0">Per essere benvenuto devi essere autenticato</label></p>
+        {% endif %}
+    </body>
+    <script>
+        var mesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
+        const MAX_ANNO = 2040;
+
+        var spanMese = document.getElementById("spanMese");
+        var spanAnno = document.getElementById("spanAnno");
+        var selMese = document.getElementById("selMese");
+        var selAnno = document.getElementById("selAnno");
+        var selGiorno = document.getElementById("selGiorno");
+        var dataPassata = document.getElementById("dataPassata");
+        var calendar = document.getElementById("calendar");
+        var first_column = document.getElementById("first_column");
+        var last_day = document.getElementById("last_day");
+        var changeCal = document.getElementById("changeCal");
+
+        var firstColumn = document.getElementById("firstColumn");
+        var firstColumnDays = firstColumn.textContent;
+        var lastDay = document.getElementById("lastDay").textContent;
+        var meseSelezionato = spanMese.textContent;
+        var annoSelezionato = spanAnno.textContent;
+
+        document.body.onload = function(){
+            var tabella = document.getElementById("tabella");
+            tabella.innerHTML = CreaCalendario();  //Aggiunta del calendario
+            
+            var nomeMese = document.getElementById("nomeMese");
+            nomeMese.innerHTML = mesi[meseSelezionato-1];
+            CreaComboBox();
+        }
+
+        //Funzione per creare le combo box con mesi e anni
+        function CreaComboBox(){
+            for(let i=0;i<mesi.length;i++){
+                if(meseSelezionato == i+1)
+                    selMese.add(new Option(mesi[i], i+1, false, true)); //Opzione selzionata
+                else
+                    selMese.add(new Option(mesi[i], i+1));
+            }
+            
+            for(let i=annoSelezionato;i<=MAX_ANNO;i++){
+                if(annoSelezionato == i)
+                    selAnno.add(new Option(i, i, false, true));
+                else
+                    selAnno.add(new Option(i, i));
+            }
+        }
+
+        //Funzione per creare il calendario
+        function CreaCalendario(){
+            var cal = "<table><thead><tr><th colspan='7'><span id='nomeMese'></span></th></tr></thead><tr>";
+            var con = 0;
+
+            for(;con<firstColumnDays;con++)  //Creazione delle colonne precedenti al primo del mese
+                cal += "<td value=\"\" style='background-color:#00000041!important;'></td>";
+            for(i=0;con<42;con++,i++){  //Creazione del resto del calendario
+                if(con%7==0)  //Creazione nuova riga
+                    cal += "<tr>";
+                if(i<lastDay){  //Creazione di un giorno del mese
+                    cal += "<td ";
+                    value = DataCorretta(annoSelezionato, meseSelezionato, i+1); //Imposto come value la data formato "yyyy-mm-dd" (utile successivamente nel database)
+                    cal += "value =\"" + value + "\"";
+                    
+                    //Creazione variabili per controllare la settimana prenotabile
+                    var str = new String(value);
+                    var v = new Date(value);
+                    var o = new Date();
+                    var oggi = new Date(o.getFullYear(), o.getMonth(), o.getDate(), 00, 00, 00);
+                    var settimana = new Date();
+                    settimana.setDate(settimana.getDate() + 7);
+                    
+                    if(v.getTime() >= oggi.getTime() && v.getTime() <= settimana.getTime()){  //Se prenotabile sfondo "bianco" e "verde" se giorno corrente
+                        if(v.getDate() == oggi.getDate())
+                            cal += " style='background-color:#228B22!important;' onclick=\"SubmitTestCalendar('" + str + "');\"><span>" + (i+1) + "</span><br>";
+                        else
+                            cal += " onclick=\"SubmitTestCalendar('" + str + "');\"><span>" + (i+1) + "</span><br>";
+                    }
+                    else //Se prenotabile sfondo "grigio"
+                        cal += " style='background-color:#696969!important;' onclick=\"SubmitTestCalendar('" + str + "');\"><span>" + (i+1) + "</span><br>";
+                    giornoSettimana = GiornoSettimana(annoSelezionato, meseSelezionato, i+1);
+                    cal += giornoSettimana + "</td>";
+                }
+                else //Creazione del resto delle colonne successive all'ultimo del mese
+                    cal += "<td value=\"\" style='background-color:#00000041!important;'></td>";
+                if(con%7==6)
+                    cal += "</tr>";
+            }
+            cal += "</table>";
+
+            return cal;
+        }
+
+        //Funzione che ritorna la data nel formato "yyyy-mm-dd"
+        function DataCorretta(anno, mese, giorno){
+            if(mese < 10)
+                mese = "0" + mese;
+            if(giorno < 10)
+                giorno = "0" + giorno;
+            return anno + "-" + mese + "-" + giorno;
+        }
+
+        //Funzione che ritorna il giorno della settimana
+        function GiornoSettimana(anno, mese, giorno){
+            var data = new Date(anno, mese-1, giorno);
+            var g = data.getDay();
+            var giornoSet = "";
+            
+            switch(g){
+                case 0:
+                    giornoSet = "Domenica";
+                    break;
+                case 1:
+                    giornoSet = "Lunedì";
+                    break;
+                case 2:
+                    giornoSet = "Martedì";
+                    break;
+                case 3:
+                    giornoSet = "Mercoledì";
+                    break;
+                case 4:
+                    giornoSet = "Giovedì";
+                    break;
+                case 5:
+                    giornoSet = "Venerdì";
+                    break;
+                case 6:
+                    giornoSet = "Sabato";
+                    break;
+            }
+
+            return giornoSet;
+        }
+
+        //Funzione che controlla se il giorno selezionato è prenotabile
+        function SubmitTestCalendar(value){
+            var v = new Date(value);
+            var oggi = new Date();
+            var settimana = new Date();
+            settimana.setDate(settimana.getDate() + 7);
+            if(v.getTime() > oggi.getTime() && v.getTime() <= settimana.getTime())
+                SubmitData(value);
+            else
+                alert("Impossibile effettuare prenotazioni nella data selezionata: " + value);
+        }
+
+        function SubmitData(value){
+            opt = dataPassata.getElementsByTagName("option");
+            opt[0].value = value;
+            calendar.submit();
+        }
+
+        function SubmitChange(){
+            changeCal.submit();
+        }
+    </script>
+</html>

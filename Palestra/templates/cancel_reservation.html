@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block pagehead %}
+        <title>Annulla prenotazioni</title>
+{% endblock %}
+{% block pagebody %}
+        <header>
+            <nav>
+                <div id="div0">
+                    <a href="reserved_private">Area personale</a>
+                </div>
+                <div id="div1">
+                    <h1>Cancella prenotazione</h1>
+                </div>
+                <div id="div2">
+                </div>
+            </nav>
+        </header>
+        <h3>Scegli prenotazione</h3>
+        {% if reservations %}
+        <div id="operazioniDisp">
+            <section id="sezione0" class="w3-container w3-card-4">
+                <form id="form0" action="/cancel_reservation_conf" method="POST">
+                    <section>
+                        <div>
+                            <label>Scegli la prenotazione da cancellare</label>
+                            <select id="select0" name="idSlot">
+                                {% for p in reservations %}
+                                    <option value={{p.slot}}>Slot #{{ p.slot }} : {{ p.giorno }} dalle {{ p.orainizio }} alle {{ p.orafine }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <input class="button" type="button" value="Cancella" onclick="ModificaCorso()">
+                    </section>
+                </form>
+            </section>
+        </div>
+        {% endif %}
+{% endblock %}   
+{% block pagescript %}       
+    <script>
+        var form0 = document.getElementById("form0");
+        var select0 = document.getElementById("select0");
+
+        function ModificaCorso() {
+            if(select0.value != "")
+                form0.submit();
+            else
+                alert("I dati non sono stati inseritit correttamente");
+        }
+    </script>
+{% endblock %}

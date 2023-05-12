@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block pagehead %}
+        <title>Sign in</title>
+        
+        <style>
+            #sezione0{
+                width: 100%!important;
+                background-color: #f3f2ee!important;
+            }
+
+            #sezione0 div{
+                width: 40%!important;
+                display: block!important;
+                margin: 0 auto!important;
+            }
+
+            #sezione0 div input[type="email"], input[type="password"]{
+                width: 100%!important;
+                border: 0.1px solid black!important;
+                padding: 10px!important;
+                margin-top: 10px!important;
+                font-size: 12pt!important;
+            }
+
+            #sezione0 div input[type="email"]{
+                margin-top: 20px!important;
+            }
+
+            #sezione0 input[type="submit"]{
+                width: 20%!important;
+                display: block!important;
+                margin: 0 auto!important;
+                margin-top: 30px!important;
+                padding: 10px 20px 10px 20px!important;
+                border-radius: 5px!important;
+                font-size: 20pt!important;
+                border: 1px solid black!important;
+                background-color: #4eb99f!important;
+            }
+
+            #sezione0 input[type="submit"]:hover{
+                border: 2px solid blue!important;
+                background-color: #5febc8!important;
+            }
+
+            #sezione0 div a{
+                text-align: center!important;
+                color: blue!important;
+                display: block!important;
+                margin: 0 auto!important;
+                margin-top: 10px!important;
+            }
+        </style>
+{% endblock %}        
+{% block pagebody %}
+        <header>
+            <nav>
+                <div id="div0">
+                    <a href="/">Homepage</a>
+                </div>
+                <div id="div1">
+                    <h1>Effettua l'accesso</h1>
+                </div>
+                <div id="div2">
+                </div>
+            </nav>
+        </header>
+        
+        <section id="sezione0">
+            <form action="/login" method="POST">
+            
+                <div>
+                    <input type="email" value="" name="user" placeholder="Email">
+                </div>
+               
+                <div>
+                    <input type="password" value="" name="pass" placeholder="Password">
+                </div>
+
+                <input type="submit" value="Login">
+
+                <div>
+                    <a href="signup">Sei nuovo? Registrati qui.</a>
+                </div>
+            </form>
+        </section>
+{% endblock %}
+{% block pagescript %}
+{% endblock %}
